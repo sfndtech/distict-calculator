@@ -4,7 +4,6 @@
 const YOUR_API_KEY = "keyBbmUk5ERyknlM7"
 const Airtable = require('airtable');
 const base = new Airtable({apiKey: YOUR_API_KEY}).base('appaqETGl6MFqjZAP');
-const table = base.getTable("District Calculator");
 
 const GEOJSON = 
 {
@@ -45898,7 +45897,7 @@ function getDistrict(districtPolygonsMap, point) {
 
 const districtPolygonsMap = convertGeoJsonToDistrictPolygonsMap(GEOJSON);
 const districtPropertiesMap = extractPropertiesFromGeoJson(GEOJSON);
-async function getDistricts() {
+async function getDistricts(at_base) {
   const table = base.getTable("District Calculator");
   const waitForAll = [];
   (await table.selectRecordsAsync()).records.forEach((record) => {
@@ -45918,4 +45917,4 @@ async function getDistricts() {
   await Promise.all(waitForAll);
 }
 
-await getDistricts();
+await getDistricts(base);
