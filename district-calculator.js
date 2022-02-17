@@ -1,6 +1,8 @@
-// AirTableKey:termsWINDremedySTEPshed
-//
-// Takes a set of users and matches them to restaurants based on meal preference and location.
+const AIRTABLE_API_KEY =  "termsWINDremedySTEPshed";
+var Airtable = require('airtable');
+var Airtable = require('airtable');
+var base = new Airtable({apiKey: AIRTABLE_API_KEY}).base('appaqETGl6MFqjZAP');
+
 const GEOJSON = {
     "type": "FeatureCollection",
     "features": [{
