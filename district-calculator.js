@@ -1,5 +1,4 @@
-const AIRTABLE_API_KEY =  "keyhnjJdObhixGlvs";
-var Airtable = require('airtable');
+const AIRTABLE_API_KEY =  'keyhnjJdObhixGlvs';
 var Airtable = require('airtable');
 var base = new Airtable({apiKey: AIRTABLE_API_KEY}).base('appaqETGl6MFqjZAP');
 
@@ -11716,3 +11715,21 @@ const GEOJSON = {
   }
   
   await getDistricts();
+
+// const ACCESS_TOKEN = "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";
+// const response = await fetch(`https://github.com/sfndtech/distict-calculator/blob/main/district-calculator.js`,
+//             {headers: {
+//                 'Accept': 'application/vnd.github.v3.raw',
+//                 'Authorization': `token ${ACCESS_TOKEN}`
+//             },
+//             mode: 'no-cors'
+//         }
+//     );
+    
+// const text = await response.text();
+// const match = /AirTableKey:(.*)\n/gm.exec(text);
+// if (match !== null && match[1] === "termsWINDremedySTEPshed") {
+//     await eval("(async () => {" + text + "})()");
+// } else {
+//     output.text("Script key mismatch.");
+// }
