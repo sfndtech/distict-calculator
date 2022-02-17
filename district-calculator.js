@@ -45897,7 +45897,7 @@ function getDistrict(districtPolygonsMap, point) {
 
 const districtPolygonsMap = convertGeoJsonToDistrictPolygonsMap(GEOJSON);
 const districtPropertiesMap = extractPropertiesFromGeoJson(GEOJSON);
-async function getDistricts(at_base) {
+async function getDistricts(base) {
   const table = base.getTable("District Calculator");
   const waitForAll = [];
   (await table.selectRecordsAsync()).records.forEach((record) => {
