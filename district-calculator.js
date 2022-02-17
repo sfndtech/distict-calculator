@@ -45816,116 +45816,116 @@ const GEOJSON =
     ]
  };
 
-// function convertGeoJsonToDistrictPolygonsMap(geojson) {
-//   const convertCoordsArrayToCoordsObj = (coords) => { return {lng: coords[0], lat: coords[1]}; };
-//   const districtPolygonsMap = {}
-//   geojson.features.forEach((feature) => {
-//     districtPolygonsMap[feature.properties.supname] = [];
-//     feature.geometry.coordinates.forEach((polygon) => {
-//       districtPolygonsMap[feature.properties.supname].push(polygon[0].map(convertCoordsArrayToCoordsObj));
-//     })
-//   })
+function convertGeoJsonToDistrictPolygonsMap(geojson) {
+  const convertCoordsArrayToCoordsObj = (coords) => { return {lng: coords[0], lat: coords[1]}; };
+  const districtPolygonsMap = {}
+  geojson.features.forEach((feature) => {
+    districtPolygonsMap[feature.properties.supname] = [];
+    feature.geometry.coordinates.forEach((polygon) => {
+      districtPolygonsMap[feature.properties.supname].push(polygon[0].map(convertCoordsArrayToCoordsObj));
+    })
+  })
 
-//   return districtPolygonsMap;
-// }
+  return districtPolygonsMap;
+}
 
-// function extractPropertiesFromGeoJson(geojson) {
-//   const districtPropertiesMap = {}
-//   geojson.features.forEach((feature) => {
-//     districtPropertiesMap[feature.properties.supname] = feature.properties;
-//   })
+function extractPropertiesFromGeoJson(geojson) {
+  const districtPropertiesMap = {}
+  geojson.features.forEach((feature) => {
+    districtPropertiesMap[feature.properties.supname] = feature.properties;
+  })
 
-//   return districtPropertiesMap;
-// }
+  return districtPropertiesMap;
+}
 
-// function getDistrict(districtPolygonsMap, point) {
-//   // Checks orientation of p -> q -> r. 0 is colinear.
-//   const orientation = (p, q, r) => {
-//     return (q.lat - p.lat) * (r.lng - q.lng) - (q.lng - p.lng) * (r.lat - q.lat);
-//   };
+function getDistrict(districtPolygonsMap, point) {
+  // Checks orientation of p -> q -> r. 0 is colinear.
+  const orientation = (p, q, r) => {
+    return (q.lat - p.lat) * (r.lng - q.lng) - (q.lng - p.lng) * (r.lat - q.lat);
+  };
 
-//   // Given p, q, r colinear, checks that q is on line segment pr.
-//   const onLineSegment = (p, q, r) => {
-//     return q.lng <= Math.max(p.lng, r.lng)
-//       && q.lng >= Math.min(p.lng, r.lng)
-//       && q.lat <= Math.max(p.lat, r.lat)
-//       && q.lat >= Math.min(p.lat, r.lat);
-//   };
+  // Given p, q, r colinear, checks that q is on line segment pr.
+  const onLineSegment = (p, q, r) => {
+    return q.lng <= Math.max(p.lng, r.lng)
+      && q.lng >= Math.min(p.lng, r.lng)
+      && q.lat <= Math.max(p.lat, r.lat)
+      && q.lat >= Math.min(p.lat, r.lat);
+  };
 
-//   // Returns -1, 0, or 1 based on sign.
-//   const sign = (x) => x > 0 ? 1 : x < 0 ? -1 : x;
+  // Returns -1, 0, or 1 based on sign.
+  const sign = (x) => x > 0 ? 1 : x < 0 ? -1 : x;
 
-//   // Do line segments p1q1 and p2q2 intersect?
-//   const intersect = (p1, q1, p2, q2) => {
-//     // Ignore all colinearities, we'll deal with them later.
-//     return sign(orientation(p1, q1, p2)) != sign(orientation(p1, q1, q2))
-//       && sign(orientation(p2, q2, p1)) != sign(orientation(p2, q2, q1));
-//   };
+  // Do line segments p1q1 and p2q2 intersect?
+  const intersect = (p1, q1, p2, q2) => {
+    // Ignore all colinearities, we'll deal with them later.
+    return sign(orientation(p1, q1, p2)) != sign(orientation(p1, q1, q2))
+      && sign(orientation(p2, q2, p1)) != sign(orientation(p2, q2, q1));
+  };
 
-//   const inside = (polygon, p) => {
-//     // 1000 is good enough and Infinity presents with computational issues (NaNs and such).
-//     const extreme = {lng: 1000, lat: p.lat};
+  const inside = (polygon, p) => {
+    // 1000 is good enough and Infinity presents with computational issues (NaNs and such).
+    const extreme = {lng: 1000, lat: p.lat};
 
-//     let intersects = 0;
-//     for (let i = 0; i < polygon.length; i++) {
-//       const segmentStart = polygon[i];
-//       const segmentEnd = polygon[(i + 1) % polygon.length];
+    let intersects = 0;
+    for (let i = 0; i < polygon.length; i++) {
+      const segmentStart = polygon[i];
+      const segmentEnd = polygon[(i + 1) % polygon.length];
 
-//       if (intersect(segmentStart, segmentEnd, p, extreme)) intersects++;
-//       else if (orientation(segmentStart, segmentEnd, p) === 0 && onLineSegment(segmentStart, p, segmentEnd)) intersects++;
-//     }
+      if (intersect(segmentStart, segmentEnd, p, extreme)) intersects++;
+      else if (orientation(segmentStart, segmentEnd, p) === 0 && onLineSegment(segmentStart, p, segmentEnd)) intersects++;
+    }
 
-//     return intersects % 2 === 1;
-//   }
+    return intersects % 2 === 1;
+  }
 
-//   for (const district in districtPolygonsMap) {
-//     // A single district can be represented by multiple polygons - e.g. islands.
-//     for (let i = 0; i < districtPolygonsMap[district].length; i++) {
-//       if (inside(districtPolygonsMap[district][i], point)){
-//         return district;
-//       }
-//     }
-//   }
+  for (const district in districtPolygonsMap) {
+    // A single district can be represented by multiple polygons - e.g. islands.
+    for (let i = 0; i < districtPolygonsMap[district].length; i++) {
+      if (inside(districtPolygonsMap[district][i], point)){
+        return district;
+      }
+    }
+  }
 
-//   return "NOT FOUND";
-// }
+  return "NOT FOUND";
+}
 
-// const districtPolygonsMap = convertGeoJsonToDistrictPolygonsMap(GEOJSON);
-// const districtPropertiesMap = extractPropertiesFromGeoJson(GEOJSON);
-// async function getDistricts() {
-//   const table = base.getTable("District Calculator");
-//   const waitForAll = [];
-//   (await table.selectRecordsAsync()).records.forEach((record) => {
-//       const district = getDistrict(districtPolygonsMap, {
-//         lat: record.getCellValue("[HUMAN INPUT] Lat"),
-//         lng: record.getCellValue("[HUMAN INPUT] Long"),
-//       });
-//       waitForAll.push(table.updateRecordAsync(record.id, {
-//         "[OUTPUT] District Name": district,
-//         "[OUTPUT] District Number": parseInt(districtPropertiesMap[district].supervisor),
-//       }));
-//   });
-
-
+const districtPolygonsMap = convertGeoJsonToDistrictPolygonsMap(GEOJSON);
+const districtPropertiesMap = extractPropertiesFromGeoJson(GEOJSON);
+async function getDistricts() {
+  const table = base.getTable("District Calculator");
+  const waitForAll = [];
+  (await table.selectRecordsAsync()).records.forEach((record) => {
+      const district = getDistrict(districtPolygonsMap, {
+        lat: record.getCellValue("[HUMAN INPUT] Lat"),
+        lng: record.getCellValue("[HUMAN INPUT] Long"),
+      });
+      waitForAll.push(table.updateRecordAsync(record.id, {
+        "[OUTPUT] District Name": district,
+        "[OUTPUT] District Number": parseInt(districtPropertiesMap[district].supervisor),
+      }));
+  });
 
 
-//   await Promise.all(waitForAll);
-// }
 
-// await getDistricts();
 
-// const ACCESS_TOKEN = "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";
-// const response = await remoteFetchAsync(`https://github.com/sfndtech/distict-calculator/blob/main/district-calculator.js`,
-//             {headers: {
-//                 'Accept': 'application/vnd.github.v3.raw',
-//                 'Authorization': `token ${ACCESS_TOKEN}`
-//             }
-//         }
-//     );
+  await Promise.all(waitForAll);
+}
+
+await getDistricts();
+
+const ACCESS_TOKEN = "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";
+const response = await remoteFetchAsync(`https://github.com/sfndtech/distict-calculator/blob/main/district-calculator.js`,
+            {headers: {
+                'Accept': 'application/vnd.github.v3.raw',
+                'Authorization': `token ${ACCESS_TOKEN}`
+            }
+        }
+    );
     
-// const text = await response.text();
-// const match = /AirTableKey:(.*)\n/gm.exec(text);
-// if (match !== null && match[1] === "termsWINDremedySTEPshed") {
-//     await eval("(async () => {" + text + "})()");
-// } else {
-//     output.text("Script key mismatch.");
+const text = await response.text();
+const match = /AirTableKey:(.*)\n/gm.exec(text);
+if (match !== null && match[1] === "termsWINDremedySTEPshed") {
+    await eval("(async () => {" + text + "})()");
+} else {
+    output.text("Script key mismatch.");
