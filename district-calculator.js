@@ -1,6 +1,10 @@
 // AirTableKey:termsWINDremedySTEPshed
 //
 // Takes a set of users and matches them to restaurants based on meal preference and location.
+const YOUR_API_KEY = "keyBbmUk5ERyknlM7"
+var Airtable = require('airtable');
+var base = new Airtable({apiKey: YOUR_API_KEY}).base('appaqETGl6MFqjZAP');
+
 const GEOJSON = 
 {
     "type":"FeatureCollection",
@@ -45906,6 +45910,9 @@ async function getDistricts() {
         "[OUTPUT] District Number": parseInt(districtPropertiesMap[district].supervisor),
       }));
   });
+
+
+
 
   await Promise.all(waitForAll);
 }
