@@ -45913,19 +45913,3 @@ async function getDistricts() {
 }
 
 await getDistricts();
-
-const ACCESS_TOKEN = "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";
-const response = await remoteFetchAsync(`https://github.com/sfndtech/distict-calculator/blob/main/district-calculator.js`,
-            {headers: {
-                'Accept': 'application/vnd.github.v3.raw',
-                'Authorization': `token ${ACCESS_TOKEN}`
-            }
-        }
-    );
-    
-const text = await response.text();
-const match = /AirTableKey:(.*)\n/gm.exec(text);
-if (match !== null && match[1] === "termsWINDremedySTEPshed") {
-    await eval("(async () => {" + text + "})()");
-} else {
-    output.text("Script key mismatch.");
