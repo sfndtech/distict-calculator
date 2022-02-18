@@ -45906,9 +45906,6 @@ async function getDistricts() {
       }));
   });
 
-
-
-
   await Promise.all(waitForAll);
 }
 
